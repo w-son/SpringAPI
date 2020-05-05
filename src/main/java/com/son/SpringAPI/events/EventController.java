@@ -2,10 +2,10 @@ package com.son.SpringAPI.events;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.Errors;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +22,7 @@ public class EventController {
 
     private final EventRepository eventRepository;
     private final ModelMapper modelMapper;
+    private final EventValidator eventValidator;
 
     @PostMapping
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
@@ -33,7 +34,14 @@ public class EventController {
          Request를 Dto에 바인딩 할 시에 검증을 할 수 있게 해준다
          Dto 내 각 필드에 설정 해 놓은 Annotation을 모두 검증하게 된다
          그 결과를 Valid를 사용한 객체 바로 """오른쪽"""의 객체 Errors에 담아준다
+
+         그 외의 세부적인 값들을 검증하려면
+         Validator을 빈에 등록해서 Dto를 넘긴 후에 에러를 검출하면 된다
          */
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+        eventValidator.validate(eventDto, errors);
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
