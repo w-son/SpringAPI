@@ -47,6 +47,8 @@ public class EventController {
         }
 
         Event event = modelMapper.map(eventDto, Event.class);
+        // 사실 비즈니스 로직을 호출하는 부분은 Service 계층에 위임하면 좋다
+        event.update();
         Event newEvent = eventRepository.save(event);
         // 아래의 redirectUri를 생성해서 리턴해준다
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
