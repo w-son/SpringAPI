@@ -1,6 +1,7 @@
 package com.son.SpringAPI.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.son.SpringAPI.common.TestDescription;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,7 @@ public class EventControllerTests {
     ObjectMapper objectMapper;
 
     @Test
+    @TestDescription("정상적으로 이벤트를 생성하는 테스트")
     public void createEvent() throws Exception {
         EventDto event = EventDto.builder()
                 .name("Spring")
@@ -70,6 +72,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력 받을 수 없는 값을 사용한 경우의 테스트")
     public void badRequest() throws Exception {
         Event event = Event.builder()
                 .id(100)
@@ -101,6 +104,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력값이 비어 있는 경우의 테스트")
     public void emptyInput() throws Exception {
         EventDto eventDto = EventDto.builder().build();
         this.mockMvc.perform(post("/api/events")
@@ -110,6 +114,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력값이 잘못된 경우의 테스트")
     public void wrongInput() throws Exception {
         EventDto eventDto = EventDto.builder()
                 .name("Spring")
@@ -127,7 +132,11 @@ public class EventControllerTests {
         this.mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.objectMapper.writeValueAsString(eventDto)))
-                .andExpect(status().isBadRequest());
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].objectName").exists())
+                .andExpect(jsonPath("$[0].defaultMessage").exists())
+                .andExpect(jsonPath("$[0].code").exists());
     }
 
 }
