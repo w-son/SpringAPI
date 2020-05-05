@@ -1,9 +1,13 @@
 package com.son.SpringAPI.events;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class EventTest {
 
     @Test
@@ -30,56 +34,41 @@ public class EventTest {
     }
 
     @Test
-    public void testFree() throws Exception {
+    @Parameters({
+            "0, 0, true",
+            "100, 0, false",
+            "0, 100, false"
+    })
+    public void testFree(int basePrice, int maxPrice, boolean isFree) throws Exception {
         // Given
         Event event = Event.builder()
-                .basePrice(0)
-                .maxPrice(0)
+                .basePrice(basePrice)
+                .maxPrice(maxPrice)
                 .build();
         // When
         event.update();
         // Then
-        assertThat(event.isFree()).isTrue();
+        assertThat(event.isFree()).isEqualTo(isFree);
+    }
 
-        // Given
-        event = Event.builder()
-                .basePrice(100)
-                .maxPrice(0)
-                .build();
-        // When
-        event.update();
-        // Then
-        assertThat(event.isFree()).isFalse();
-
-        // Given
-        event = Event.builder()
-                .basePrice(0)
-                .maxPrice(100)
-                .build();
-        // When
-        event.update();
-        // Then
-        assertThat(event.isFree()).isFalse();
+    private Object[] paramsForTestOffline() {
+        return new Object[] {
+                new Object[] {"홍익대학교", true},
+                new Object[] {"       ", false}
+        };
     }
 
     @Test
-    public void testOffline() throws Exception {
+    @Parameters(method = "paramsForTestOffline")
+    public void testOffline(String location, boolean isOffline) throws Exception {
         // given
         Event event = Event.builder()
-                .location("홍익대학교")
+                .location(location)
                 .build();
         // when
         event.update();
         // then
-        assertThat(event.isOffline()).isTrue();
-
-        // given
-        event = Event.builder()
-                .build();
-        // when
-        event.update();
-        // then
-        assertThat(event.isOffline()).isFalse();
+        assertThat(event.isOffline()).isEqualTo(isOffline);
     }
 
 }
