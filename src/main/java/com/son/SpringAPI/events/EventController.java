@@ -46,11 +46,11 @@ public class EventController {
          그 외의 세부적인 값들을 검증하려면
          Validator을 빈에 등록해서 Dto를 넘긴 후에 에러를 검출하면 된다
          */
-        if(errors.hasErrors()) {
+        if(errors.hasErrors()) { // Valid의 에러
             return ResponseEntity.badRequest().body(new ErrorsResource(errors));
         }
         eventValidator.validate(eventDto, errors);
-        if(errors.hasErrors()) {
+        if(errors.hasErrors()) { // EventValidator의 에러
             return ResponseEntity.badRequest().body(new ErrorsResource(errors));
         }
 
@@ -93,6 +93,33 @@ public class EventController {
         Event event = optionalEvent.get();
         EventResource eventResource = new EventResource(event);
         eventResource.add(new Link("/docs/index.html#resources-events-get").withRel("profile"));
+        return ResponseEntity.ok(eventResource);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateEvent(@PathVariable("id") Integer id,
+                                      @RequestBody @Valid EventDto eventDto,
+                                      Errors errors) {
+
+        Optional<Event> optionalEvent = eventRepository.findById(id);
+        if(optionalEvent.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        if(errors.hasErrors()) { // @Valid에 의한 에러 검출
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+        eventValidator.validate(eventDto, errors);
+        if(errors.hasErrors()) { // ErrorValidator에 의한 에러 검출
+            return ResponseEntity.badRequest().body(new ErrorsResource(errors));
+        }
+
+        Event event = optionalEvent.get();
+        // 검증만 끝난다면 변경된 값들은 ModelMapper로 수정해준다
+        modelMapper.map(eventDto, event);
+        Event updatedEvent = eventRepository.save(event);
+
+        EventResource eventResource = new EventResource(updatedEvent);
+        eventResource.add(new Link("/docs/index.html#resources-events-update").withRel("profile"));
         return ResponseEntity.ok(eventResource);
     }
 
