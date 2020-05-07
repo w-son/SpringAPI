@@ -16,7 +16,7 @@ public class EventResource extends Resource<Event> {
      */
 
     /* v1 , extends ResourceSupport
-    @JsonUnwrapped
+    @JsonUnwrapped 왜 필요?? wrapped 된 상태이면 identifier를 인식할 수 없다
     private Event event;
 
     public EventResource(Event event) {
