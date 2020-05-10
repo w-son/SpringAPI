@@ -1,5 +1,6 @@
 package com.son.SpringAPI.accounts;
 
+import com.son.SpringAPI.common.AppProperties;
 import com.son.SpringAPI.events.EventRepository;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -38,6 +39,8 @@ public class AccountServiceTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     EventRepository eventRepository;
+    @Autowired
+    AppProperties appProperties;
 
     @Before
     public void setUp() {
@@ -49,8 +52,8 @@ public class AccountServiceTest {
     @Test
     public void findByUsername() throws Exception {
         // Given
-        String username = "son@naver.com";
-        String password = "son";
+        String username = appProperties.getTestUsername();
+        String password = appProperties.getTestPassword();
         Account account = Account.builder()
                 .email(username)
                 .password(password)

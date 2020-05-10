@@ -4,6 +4,7 @@ import com.son.SpringAPI.accounts.Account;
 import com.son.SpringAPI.accounts.AccountRepository;
 import com.son.SpringAPI.accounts.AccountRole;
 import com.son.SpringAPI.accounts.AccountService;
+import com.son.SpringAPI.common.AppProperties;
 import com.son.SpringAPI.common.BaseControllerTest;
 import com.son.SpringAPI.common.TestDescription;
 import com.son.SpringAPI.events.EventRepository;
@@ -28,6 +29,8 @@ public class AuthServerConfigTest extends BaseControllerTest {
     EventRepository eventRepository;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    AppProperties appProperties;
 
     @Before
     public void setUp() {
@@ -41,8 +44,8 @@ public class AuthServerConfigTest extends BaseControllerTest {
     public void getAuthToken() throws Exception {
         // Account 정보를 가지고 있는 서버에 대해 인증하는 방법
 
-        String username = "son@naver.com";
-        String password = "son";
+        String username = appProperties.getTestUsername();
+        String password = appProperties.getTestPassword();
         Account account = Account.builder()
                 .email(username)
                 .password(password)
@@ -50,8 +53,8 @@ public class AuthServerConfigTest extends BaseControllerTest {
                 .build();
         accountService.saveAccount(account);
 
-        String clientId = "myApp";
-        String clientSecret = "pass";
+        String clientId = appProperties.getClientId();
+        String clientSecret = appProperties.getClientSecret();
 
         mockMvc.perform(post("/oauth/token")
                         .with(httpBasic(clientId, clientSecret))

@@ -4,6 +4,7 @@ import com.son.SpringAPI.accounts.Account;
 import com.son.SpringAPI.accounts.AccountRepository;
 import com.son.SpringAPI.accounts.AccountRole;
 import com.son.SpringAPI.accounts.AccountService;
+import com.son.SpringAPI.common.AppProperties;
 import com.son.SpringAPI.common.BaseControllerTest;
 import com.son.SpringAPI.common.TestDescription;
 import org.codehaus.jackson.JsonParser;
@@ -41,6 +42,8 @@ public class EventControllerTests extends BaseControllerTest {
     AccountService accountService;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    AppProperties appProperties;
 
     @Before
     public void setUp() {
@@ -140,8 +143,8 @@ public class EventControllerTests extends BaseControllerTest {
 
     private String getAccessToken() throws Exception {
 
-        String username = "son@naver.com";
-        String password = "son";
+        String username = appProperties.getTestUsername();
+        String password = appProperties.getTestPassword();
         Account account = Account.builder()
                 .email(username)
                 .password(password)
@@ -149,8 +152,8 @@ public class EventControllerTests extends BaseControllerTest {
                 .build();
         accountService.saveAccount(account);
 
-        String clientId = "myApp";
-        String clientSecret = "pass";
+        String clientId = appProperties.getClientId();
+        String clientSecret = appProperties.getClientSecret();
 
         ResultActions perform = mockMvc.perform(post("/oauth/token")
                 .with(httpBasic(clientId, clientSecret))
