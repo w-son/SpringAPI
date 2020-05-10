@@ -1,6 +1,8 @@
 package com.son.SpringAPI.accounts;
 
+import com.son.SpringAPI.events.EventRepository;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -30,18 +32,25 @@ public class AccountServiceTest {
 
     @Autowired
     AccountService accountService;
-
     @Autowired
     AccountRepository accountRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    EventRepository eventRepository;
+
+    @Before
+    public void setUp() {
+        // 테스트를 일괄적으로 실행할 경우 메모리에서 데이터들이 공유가 되기때문에 id 중복 생성 문제가 발생할 수 있다
+        eventRepository.deleteAll();
+        accountRepository.deleteAll();
+    }
 
     @Test
     public void findByUsername() throws Exception {
         // Given
-        String username = "williamson@naver.com";
-        String password = "william";
+        String username = "son@naver.com";
+        String password = "son";
         Account account = Account.builder()
                 .email(username)
                 .password(password)

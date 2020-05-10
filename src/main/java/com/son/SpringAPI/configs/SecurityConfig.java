@@ -22,6 +22,17 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    /*
+     동작 흐름
+     1. 요청이 들어온다
+     2. 서블릿 필터가 가로챈다
+     3. Security Filter로 이 요청을 넘긴 후 인증을 적용할지 말지를 결정
+     4. 적용한다면 Security Interceptor가 받은 후
+        a. Security Context Holder 를 확인하고 접근하는 사용자가 인증을 해야하는지 확인한다
+        b. AuthenticationManager (두개의 인터페이스 UserDetailsService, PasswordEncoder 를 사용하는) 를 활용하여 인증을 하고
+           인증 정보를 Security Context Holder에 인증 정보를 저장한다
+        c. 권한 정보 (Account의 role 같은경우) 를 확인한 후 리소스 접근 여부를 결정한다
+     */
 
     private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
