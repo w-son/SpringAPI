@@ -1,5 +1,6 @@
 package com.son.SpringAPI.events;
 
+import com.son.SpringAPI.accounts.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,9 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT;
+
+    @ManyToOne
+    private Account manager;
 
     public void update() {
         if (this.basePrice == 0 && this.maxPrice == 0) {
