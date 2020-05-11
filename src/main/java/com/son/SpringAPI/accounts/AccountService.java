@@ -34,8 +34,9 @@ public class AccountService implements UserDetailsService {
         /*
          UserDetails를 상속받은 User라는 클래스를 활용함으로써 override해야하는 클래스를 작성하지 않아도 된다
          User 클래스의 생성자를 이용해서 만들 수 있음
+         return new User(account.getEmail(), account.getPassword(), authorities(account.getRoles()));
          */
-        return new User(account.getEmail(), account.getPassword(), authorities(account.getRoles()));
+        return new AccountAdapter(account);
     }
 
     private Collection<? extends GrantedAuthority> authorities(Set<AccountRole> roles) {
