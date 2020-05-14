@@ -143,6 +143,7 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
 			<!-- static path에 index.html을 복사 = 서버가 돌아갈때 조회 가능 -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
