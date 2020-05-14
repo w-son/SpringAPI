@@ -6,6 +6,7 @@
 - Spring Data JPA
 - Spring HATEOAS
 - Spring REST Docs
+- Spring Security
 - lombok
 - h2
 - PostgreSQL
