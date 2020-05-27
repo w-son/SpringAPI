@@ -73,7 +73,6 @@ public class EventController {
         // 아래의 redirectUri를 생성해서 리턴해준다
         ControllerLinkBuilder selfLinkBuilder = linkTo(EventController.class).slash(newEvent.getId());
         URI createdUri = selfLinkBuilder.toUri();
-        event.setId(10);
 
         // 링크를 생성할 수 있는 Event<Resource>를 상속받은 클래스로 감싸준다
         EventResource eventResource = new EventResource(event);
