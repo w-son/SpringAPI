@@ -214,6 +214,7 @@ public class EventControllerTests extends BaseControllerTest {
                             .header(HttpHeaders.AUTHORIZATION, getAccessToken(true))
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .content(this.objectMapper.writeValueAsString(eventDto)))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -296,6 +297,7 @@ public class EventControllerTests extends BaseControllerTest {
         // When & Then
         this.mockMvc.perform(get("/api/events/{id}", event.getId()))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(jsonPath("name").exists())
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("_links.self").exists())
